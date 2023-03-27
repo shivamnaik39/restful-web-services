@@ -2,25 +2,37 @@ package com.axiom.rest.webservices.restfulwebservices.user;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // @JsonIgnoreProperties({"field1", "field2"})
+@Entity(name = "user_details")
 public class User {
 
     // static filtering, this filed will not be sent as response
     // @JsonIgnore
+    @Id
+    @GeneratedValue
     private Integer id;
 
     @Size(min = 2, message = "Name should have atleast 2 characters")
-    @JsonProperty("user_name")
+    // @JsonProperty("user_name")
     private String name;
 
     @Past(message = "Birth Date should be in the past")
-    @JsonProperty("birth_date")
+    // @JsonProperty("birth_date")
     private LocalDate birthDate;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Post> posts;
 
     public User() {
     }
@@ -58,6 +70,14 @@ public class User {
     @Override
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
 }
